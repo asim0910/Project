@@ -1,0 +1,4 @@
+{
+    "mongoURI":"mongodb+srv://asimanand:asim@cluster0.pcczq.mongodb.net/myFirstDatabase?retryWrites=true&w=majority",
+    "jwtSecret":"HCVERMA"
+}
