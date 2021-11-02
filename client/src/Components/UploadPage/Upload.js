@@ -17,22 +17,29 @@ const Upload = () => {
   const [name, setName] = useState();
   const onChange = (e) => {
     const document = e.target.files[0];
+    console.log(document);
     setFile(document);
   };
-  useEffect(() => {
-    dispatch(getFile());
-  }, []);
+
   const dispatch = useDispatch();
   const onSubmit = async (e) => {
     e.preventDefault();
     const doc = await convert(file);
-    dispatch(uploadFile({ doc, type }));
+    dispatch(uploadFile({ doc, type, name: name + ".dcm" }));
   };
 
   return (
     <>
       <h1 className='large text-primary'>Upload Records</h1>
       <form className='form' onSubmit={onSubmit}>
+        <div className='form-group'>
+          <label>Record Name</label>
+          <input
+            type='text'
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+          />
+        </div>
         <div className='form-group'>
           <label>Type of Record</label>
           <select
