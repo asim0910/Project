@@ -467,7 +467,9 @@ class DwvComponent extends React.Component {
         // check content
         if (box.innerHTML === "") {
           const p = document.createElement("p");
-          p.appendChild(document.createTextNode("Drag and drop data here"));
+          p.appendChild(
+            document.createTextNode("You can drop local files here as well")
+          );
           box.appendChild(p);
         }
         // show box
