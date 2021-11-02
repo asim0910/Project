@@ -120,14 +120,15 @@ const UserProfile = () => {
                   css={`
                     width: 30%;
                     height: 40px;
-                    background: ${page > 0 && "#17a2b8"};
-                    color: ${page > 0 && "#fff"};
+
+                    background: ${page > 0 ? "#17a2b8" : "rgba(0, 0, 0, 0.12)"};
+                    color: ${page > 0 ? "#fff" : "rgba(0, 0, 0, 0.26)"};
                   `}
                   disabled={page === 0}
                   className='btn'
                   onClick={() => setPage(page - 1)}
                 >
-                  &larr; Prev
+                  <i class='fas fa-arrow-left'></i> Prev
                 </button>
                 <div>
                   Page {page + 1} of {total_pages}
@@ -136,14 +137,18 @@ const UserProfile = () => {
                   css={`
                     width: 30%;
                     height: 40px;
-                    background: ${page < total_pages - 1 && "#17a2b8"};
-                    color: ${page < total_pages - 1 && "#fff"};
+                    background: ${page < total_pages - 1
+                      ? "#17a2b8"
+                      : "rgba(0, 0, 0, 0.12)"};
+                    color: ${page < total_pages - 1
+                      ? "#fff"
+                      : "rgba(0, 0, 0, 0.26)"};
                   `}
                   disabled={page === total_pages - 1}
                   className='btn'
                   onClick={() => setPage(page + 1)}
                 >
-                  Next &rarr;
+                  Next <i class='fas fa-arrow-right'></i>
                 </button>
               </div>
             </>

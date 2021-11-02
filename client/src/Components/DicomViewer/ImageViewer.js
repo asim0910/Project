@@ -5,8 +5,6 @@ import DwvComponent from "./DwvComponent";
 function ImageViewer({ files }) {
   return (
     <div style={{ height: "600px" }}>
-      <h4>Image View</h4>
-
       <DwvComponent files={files} />
     </div>
   );

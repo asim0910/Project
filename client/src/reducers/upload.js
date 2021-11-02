@@ -16,7 +16,7 @@ const reducer = (state = initialState, action) => {
   const { type, payload } = action;
   switch (type) {
     case UPLOAD_START:
-      return { ...state, loading: true };
+      return { ...state, uploading: true };
     case FETCH_START:
       return {
         ...state,
@@ -25,7 +25,7 @@ const reducer = (state = initialState, action) => {
     case UPLOAD_SUCCESS:
       return {
         ...state,
-        loading: false,
+        uploading: false,
       };
     case FETCH_SUCCESS:
       return {

@@ -1,8 +1,9 @@
 import "styled-components/macro";
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { getFile, uploadFile } from "../../actions/upload";
+import Spinner from "../Spinner/Spinner";
 const convert = (file) =>
   new Promise((resolve, reject) => {
     const reader = new FileReader();
@@ -20,7 +21,7 @@ const Upload = () => {
     console.log(document);
     setFile(document);
   };
-
+  const { uploading } = useSelector((state) => state.upload);
   const dispatch = useDispatch();
   const onSubmit = async (e) => {
     e.preventDefault();
@@ -29,46 +30,63 @@ const Upload = () => {
     dispatch(
       uploadFile({ doc, type, name: name + "." + file.name.split(".")[1] })
     );
+    setName();
   };
 
   return (
     <>
       <h1 className='large text-primary'>Upload Records</h1>
-      <form className='form' onSubmit={onSubmit}>
-        <div className='form-group'>
-          <label>Record Name</label>
-          <input
-            type='text'
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-          />
-        </div>
-        <div className='form-group'>
-          <label>Type of Record</label>
-          <select
-            value={type}
-            onChange={(e) => {
-              setType(e.target.value);
-            }}
-          >
-            <option>Select</option>
-            <option>X-Ray</option>
-            <option>Prescription</option>
-          </select>
-        </div>
-        <div className='form-group'>
-          <label
-            className='form-label'
+      {uploading ? (
+        <>
+          <div
             css={`
-              display: block;
+              text-align: center;
             `}
           >
-            Select File
-          </label>
-          <input type='file' accept='.dcm,.jpg,.png' onChange={onChange} />
-        </div>
-        <input type='submit' className='btn btn-primary' value='Submit' />
-      </form>
+            Uploading File, Please wait...
+          </div>
+          <Spinner />
+        </>
+      ) : (
+        <>
+          <form className='form' onSubmit={onSubmit}>
+            <div className='form-group'>
+              <label>Record Name</label>
+              <input
+                type='text'
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+              />
+            </div>
+            <div className='form-group'>
+              <label>Type of Record</label>
+              <select
+                value={type}
+                onChange={(e) => {
+                  setType(e.target.value);
+                }}
+              >
+                <option>Select</option>
+                <option>X-Ray</option>
+                <option>Prescription</option>
+              </select>
+            </div>
+            <div className='form-group'>
+              <label
+                className='form-label'
+                css={`
+                  display: block;
+                `}
+              >
+                Select File
+              </label>
+              <input type='file' accept='.dcm,.jpg,.png' onChange={onChange} />
+            </div>
+            <input type='submit' className='btn btn-primary' value='Submit' />
+          </form>
+        </>
+      )}
+
       <p className='my-1'>
         You can view your uploads at <Link to='/dashboard'>My Profile</Link>
       </p>
