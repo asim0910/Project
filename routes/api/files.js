@@ -15,9 +15,20 @@ router.post("/", auth, async (req, res) => {
 });
 router.get("/", auth, async (req, res) => {
   try {
-    let files = await File.find({ id: req.user.id });
+    const limit = 5;
+    const { filter, page } = req.query;
+    let files = await File.find({ id: req.user.id, type: filter })
+      .sort({
+        data: -1,
+      })
+      .skip(limit * page)
+      .limit(limit);
+    let total_count = await File.countDocuments({
+      id: req.user.id,
+      type: filter,
+    });
 
-    res.json(files);
+    res.json({ data: files, total_count: Math.ceil(total_count / limit) });
   } catch (err) {
     console.error(err.message);
     res.status(500).send("Server error");

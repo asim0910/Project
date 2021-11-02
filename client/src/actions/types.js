@@ -27,3 +27,5 @@ export const UPLOAD_SUCCESS = "UPLOAD_SUCCESS";
 export const UPLOAD_FAILED = "UPLOAD_FAILED";
 export const FETCH_SUCCESS = "FETCH_SUCCESS";
 export const FETCH_FAILED = "FETCH_FAILED";
+export const UPLOAD_START = "UPLOAD_START";
+export const FETCH_START = "FETCH_START";

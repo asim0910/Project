@@ -25,7 +25,10 @@ const Upload = () => {
   const onSubmit = async (e) => {
     e.preventDefault();
     const doc = await convert(file);
-    dispatch(uploadFile({ doc, type, name: name + ".dcm" }));
+    console.log();
+    dispatch(
+      uploadFile({ doc, type, name: name + "." + file.name.split(".")[1] })
+    );
   };
 
   return (
@@ -62,7 +65,7 @@ const Upload = () => {
           >
             Select File
           </label>
-          <input type='file' onChange={onChange} />
+          <input type='file' accept='.dcm,.jpg,.png' onChange={onChange} />
         </div>
         <input type='submit' className='btn btn-primary' value='Submit' />
       </form>

@@ -7,11 +7,14 @@ import Spinner from "../Spinner/Spinner";
 import { Link } from "react-router-dom";
 const UserProfile = () => {
   const dispatch = useDispatch();
-  useEffect(() => {
-    dispatch(getFile());
-  }, []);
-  const { files, loading } = useSelector((state) => state.upload);
+
+  const { files, loading, total_pages } = useSelector((state) => state.upload);
   const [selectedFile, setSelectedFile] = useState();
+  const [filter, setFilter] = useState("X-Ray");
+  const [page, setPage] = useState(0);
+  useEffect(() => {
+    dispatch(getFile({ filter, page }));
+  }, [filter, page]);
   return (
     <>
       <div
@@ -28,49 +31,125 @@ const UserProfile = () => {
           `}
         >
           <h1 className='large text-primary'>Uploaded Files</h1>
+          <div
+            className='form-group'
+            css={`
+              margin-bottom: 20px;
+            `}
+          >
+            <label>Filter type:</label>
+            <select onChange={(e) => setFilter(e.target.value)}>
+              <option>X-Ray</option>
+              <option>Prescription</option>
+            </select>
+          </div>
+          {loading ? (
+            <div
+              css={`
+                text-align: center;
+              `}
+            >
+              We are fetching files
+            </div>
+          ) : (
+            <div></div>
+          )}
+
           {loading ? (
             <Spinner />
           ) : files.length ? (
             files.map((item, index) => (
-              <ul>
-                <li
+              <>
+                <ul
                   css={`
-                    display: flex;
-                    justify-content: space-between;
-                    margin-bottom: 12px;
+                    margin-bottom: 24px;
                   `}
                 >
-                  <a
-                    key={item.name + index}
-                    href={URL.createObjectURL(item.blob)}
-                    download={item.name}
+                  <li
                     css={`
-                      width: 50%;
-                      display: inline-block;
+                      display: flex;
+                      justify-content: space-between;
+                      margin-bottom: 12px;
                     `}
                   >
-                    {item.name}
-                  </a>
-                  <button
-                    className='btn btn-primary'
-                    css={`
-                      width: 50%;
-                    `}
-                    onClick={() => {
-                      setSelectedFile(new File([item.blob], item.name));
-                    }}
-                  >
-                    View
-                  </button>
-                </li>
-              </ul>
+                    <a
+                      key={item.name + index}
+                      href={URL.createObjectURL(item.blob)}
+                      download={item.name}
+                      css={`
+                        width: 50%;
+                        display: inline-block;
+                      `}
+                    >
+                      {item.name}
+                    </a>
+                    <button
+                      className='btn btn-primary'
+                      css={`
+                        width: 50%;
+                      `}
+                      onClick={() => {
+                        setSelectedFile(
+                          new File([item.blob], item.name, { type: item.type })
+                        );
+                      }}
+                    >
+                      View
+                    </button>
+                  </li>
+                </ul>
+              </>
             ))
           ) : (
             <div>
               No files Uploaded <Link to='/upload'>click here</Link>
             </div>
           )}
+          {!loading && (
+            <>
+              {" "}
+              <div
+                css={`
+                  display: inline-flex;
+                  justify-content: space-between;
+                  width: 100%;
+                  align-items: center;
+                `}
+              >
+                <button
+                  css={`
+                    width: 30%;
+                    height: 40px;
+                    background: ${page > 0 && "#17a2b8"};
+                    color: ${page > 0 && "#fff"};
+                  `}
+                  disabled={page === 0}
+                  className='btn'
+                  onClick={() => setPage(page - 1)}
+                >
+                  &larr; Prev
+                </button>
+                <div>
+                  Page {page + 1} of {total_pages}
+                </div>
+                <button
+                  css={`
+                    width: 30%;
+                    height: 40px;
+                    background: ${page < total_pages - 1 && "#17a2b8"};
+                    color: ${page < total_pages - 1 && "#fff"};
+                  `}
+                  disabled={page === total_pages - 1}
+                  className='btn'
+                  onClick={() => setPage(page + 1)}
+                >
+                  Next &rarr;
+                </button>
+              </div>
+            </>
+          )}
         </div>
+
         <div
           className='col-lg-6 col-md-6'
           css={`

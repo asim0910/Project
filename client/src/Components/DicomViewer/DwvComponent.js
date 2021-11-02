@@ -472,7 +472,7 @@ class DwvComponent extends React.Component {
           box.appendChild(p);
         }
         // show box
-        box.setAttribute("style", "visible:true;width:50%;height:75%");
+        box.setAttribute("style", "visible:true;width:100%;height:75%");
         // stop layer listening
         if (layerDiv) {
           layerDiv.removeEventListener("dragover", this.defaultHandleDragEvent);
