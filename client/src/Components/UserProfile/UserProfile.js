@@ -14,7 +14,7 @@ const UserProfile = () => {
   const [page, setPage] = useState(0);
   useEffect(() => {
     dispatch(getFile({ filter, page }));
-  }, [filter, page]);
+  }, [dispatch, filter, page]);
   return (
     <>
       <div

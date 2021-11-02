@@ -1,8 +1,8 @@
 import "styled-components/macro";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { getFile, uploadFile } from "../../actions/upload";
+import { uploadFile } from "../../actions/upload";
 import Spinner from "../Spinner/Spinner";
 const convert = (file) =>
   new Promise((resolve, reject) => {
