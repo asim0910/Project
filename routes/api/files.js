@@ -4,8 +4,8 @@ const auth = require("../../middleware/auth");
 const File = require("../../models/File");
 router.post("/", auth, async (req, res) => {
   try {
-    const { doc, type, name } = req.body;
-    const file = new File({ doc, type, id: req.user.id, name });
+    const { doc, type, name, time } = req.body;
+    const file = new File({ doc, type, id: req.user.id, name, time });
     await file.save();
     res.status(200).json({ status: true });
   } catch (err) {

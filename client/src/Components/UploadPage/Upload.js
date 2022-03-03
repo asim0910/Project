@@ -16,6 +16,7 @@ const Upload = () => {
   const [file, setFile] = useState();
   const [type, setType] = useState();
   const [name, setName] = useState();
+  const [time, setTime] = useState();
   const onChange = (e) => {
     const document = e.target.files[0];
     console.log(document);
@@ -26,9 +27,14 @@ const Upload = () => {
   const onSubmit = async (e) => {
     e.preventDefault();
     const doc = await convert(file);
-    console.log();
+
     dispatch(
-      uploadFile({ doc, type, name: name + "." + file.name.split(".")[1] })
+      uploadFile({
+        doc,
+        type,
+        name: name + "." + file.name.split(".")[1],
+        time,
+      })
     );
     setName();
   };
@@ -59,6 +65,16 @@ const Upload = () => {
               />
             </div>
             <div className='form-group'>
+              <label>Date and Time</label>
+              <input
+                className='form-input'
+                style={{ display: "block" }}
+                type='datetime-local'
+                value={time}
+                onChange={(e) => setTime(e.target.value)}
+              />
+            </div>
+            <div className='form-group'>
               <label>Type of Record</label>
               <select
                 value={type}
@@ -69,6 +85,8 @@ const Upload = () => {
                 <option>Select</option>
                 <option>X-Ray</option>
                 <option>Prescription</option>
+                <option>CT Scan</option>
+                <option>Lab Record</option>
               </select>
             </div>
             <div className='form-group'>

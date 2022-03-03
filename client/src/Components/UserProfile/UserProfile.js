@@ -41,6 +41,8 @@ const UserProfile = () => {
             <select onChange={(e) => setFilter(e.target.value)}>
               <option>X-Ray</option>
               <option>Prescription</option>
+              <option>CT Scan</option>
+              <option>Lab Record</option>
             </select>
           </div>
           {loading ? (
@@ -83,6 +85,7 @@ const UserProfile = () => {
                     >
                       {item.name}
                     </a>
+
                     <button
                       className='btn btn-primary'
                       css={`
@@ -162,6 +165,7 @@ const UserProfile = () => {
           `}
         >
           <ImageViewer files={selectedFile} />
+          <div></div>
         </div>
       </div>
     </>

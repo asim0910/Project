@@ -17,6 +17,10 @@ const FileSchema = new mongoose.Schema({
     type: mongoose.Types.ObjectId,
     required: true,
   },
+  time: {
+    type: String,
+    required: true,
+  },
   date: {
     type: Date,
     default: Date.now,
