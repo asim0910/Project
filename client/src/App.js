@@ -15,6 +15,7 @@ import "./App.css";
 import PrivateRoute from "./Components/Routing/PrivateRoute";
 import Upload from "./Components/UploadPage/Upload";
 import UserProfile from "./Components/UserProfile/UserProfile";
+import Alert from "./Components/Alert/Alert";
 
 const App = () => {
   useEffect(() => {
@@ -27,6 +28,7 @@ const App = () => {
       <Router>
         <Fragment>
           <Navbar />
+          <Alert />
           <Switch>
             <Route exact path='/' component={Landing} />
             <div className='container'>

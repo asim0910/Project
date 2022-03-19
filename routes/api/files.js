@@ -13,13 +13,22 @@ router.post("/", auth, async (req, res) => {
     res.status(500).send("Server error");
   }
 });
+router.delete("/", auth, async (req, res) => {
+  try {
+    await File.deleteOne({ _id: req.query.id });
+    res.json({ message: "Deleted" });
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send("Server Error");
+  }
+});
 router.get("/", auth, async (req, res) => {
   try {
     const limit = 5;
     const { filter, page } = req.query;
     let files = await File.find({ id: req.user.id, type: filter })
       .sort({
-        data: -1,
+        date: -1,
       })
       .skip(limit * page)
       .limit(limit);

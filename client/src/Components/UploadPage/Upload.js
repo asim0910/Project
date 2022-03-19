@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { uploadFile } from "../../actions/upload";
 import Spinner from "../Spinner/Spinner";
+import { FileUploader } from "react-drag-drop-files";
 const convert = (file) =>
   new Promise((resolve, reject) => {
     const reader = new FileReader();
@@ -17,8 +18,7 @@ const Upload = () => {
   const [type, setType] = useState();
   const [name, setName] = useState();
   const [time, setTime] = useState();
-  const onChange = (e) => {
-    const document = e.target.files[0];
+  const onChange = (document) => {
     console.log(document);
     setFile(document);
   };
@@ -89,7 +89,7 @@ const Upload = () => {
                 <option>Lab Record</option>
               </select>
             </div>
-            <div className='form-group'>
+            {/* <div className='form-group'>
               <label
                 className='form-label'
                 css={`
@@ -99,8 +99,17 @@ const Upload = () => {
                 Select File
               </label>
               <input type='file' accept='.dcm,.jpg,.png' onChange={onChange} />
-            </div>
-            <input type='submit' className='btn btn-primary' value='Submit' />
+            </div> */}
+            <FileUploader
+              handleChange={onChange}
+              name='file'
+              types={["dcm", "jpg", "png"]}
+            />
+            <input
+              type='submit'
+              className='btn btn-primary my-1'
+              value='Submit'
+            />
           </form>
         </>
       )}

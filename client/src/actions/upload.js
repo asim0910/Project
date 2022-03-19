@@ -1,6 +1,8 @@
 import api from "../utils/api";
 import { setAlert } from "./alert";
 import {
+  DELETE_POST,
+  DELETE_SUCCESS,
   FETCH_FAILED,
   FETCH_START,
   FETCH_SUCCESS,
@@ -18,6 +20,7 @@ export const uploadFile = (formData) => async (dispatch) => {
       type: UPLOAD_SUCCESS,
       payload: res.data,
     });
+    dispatch(setAlert("File Uploaded!!", "success"));
   } catch (err) {
     const errors = err.response.data.errors;
 
@@ -28,6 +31,17 @@ export const uploadFile = (formData) => async (dispatch) => {
     dispatch({
       type: UPLOAD_FAILED,
     });
+  }
+};
+export const deleteFile = (id) => async (dispatch) => {
+  try {
+    dispatch({
+      type: DELETE_POST,
+    });
+    await api.delete(`/upload?id=${id}`);
+    dispatch(setAlert("Deleted !!", "success"));
+  } catch (err) {
+    console.error(err);
   }
 };
 export const getFile = (formData) => async (dispatch) => {
@@ -45,6 +59,7 @@ export const getFile = (formData) => async (dispatch) => {
         });
     }
     const dataObjectArrays = res.data.data.map(async (item) => {
+      console.log(item);
       let file = await urltoFile(item.doc, item.name, item.doc.split(";")[0]);
       console.log(file);
       let blob = new Blob([file], { type: file.type });
@@ -52,6 +67,8 @@ export const getFile = (formData) => async (dispatch) => {
         name: item.name,
         blob: blob,
         type: item.doc.split(";")[0],
+        date: item.time,
+        id: item._id,
       };
     });
     const data = await Promise.all(dataObjectArrays);

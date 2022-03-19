@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getFile } from "../../actions/upload";
+import { deleteFile, getFile } from "../../actions/upload";
 import ImageViewer from "../DicomViewer/ImageViewer";
 import "styled-components/macro";
 import Spinner from "../Spinner/Spinner";
@@ -15,6 +15,11 @@ const UserProfile = () => {
   useEffect(() => {
     dispatch(getFile({ filter, page }));
   }, [dispatch, filter, page]);
+  const formatDate = (date) => {
+    if (!date) return null;
+    const [dt, time] = date.split("T");
+    return `${dt}  ${time}`;
+  };
   return (
     <>
       <div
@@ -74,31 +79,53 @@ const UserProfile = () => {
                       margin-bottom: 12px;
                     `}
                   >
-                    <a
-                      key={item.name + index}
-                      href={URL.createObjectURL(item.blob)}
-                      download={item.name}
+                    {" "}
+                    <div>
+                      {" "}
+                      <a
+                        key={item.name + index}
+                        href={URL.createObjectURL(item.blob)}
+                        download={item.name}
+                        css={`
+                          width: 50%;
+                          display: inline-block;
+                        `}
+                      >
+                        {item.name}
+                      </a>
+                      <div>{formatDate(item.date)}</div>
+                    </div>
+                    <div
                       css={`
                         width: 50%;
-                        display: inline-block;
                       `}
                     >
-                      {item.name}
-                    </a>
-
-                    <button
-                      className='btn btn-primary'
-                      css={`
-                        width: 50%;
-                      `}
-                      onClick={() => {
-                        setSelectedFile(
-                          new File([item.blob], item.name, { type: item.type })
-                        );
-                      }}
-                    >
-                      View
-                    </button>
+                      <button
+                        className='btn btn-primary'
+                        css={`
+                          width: 50%;
+                        `}
+                        onClick={() => {
+                          setSelectedFile(
+                            new File([item.blob], item.name, {
+                              type: item.type,
+                            })
+                          );
+                        }}
+                      >
+                        View
+                      </button>
+                      <button
+                        className='btn btn-danger'
+                        onClick={() => {
+                          dispatch(deleteFile(item.id)).then(() => {
+                            dispatch(getFile({ filter, page }));
+                          });
+                        }}
+                      >
+                        <i class='fa fa-trash'></i>
+                      </button>
+                    </div>
                   </li>
                 </ul>
               </>
