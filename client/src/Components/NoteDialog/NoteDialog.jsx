@@ -6,24 +6,35 @@ import { useDispatch, useSelector } from "react-redux";
 import "styled-components/macro";
 import { getFile, updateFile } from "../../actions/upload";
 import jspdf from "jspdf";
-const prescriptionOptions = ["Tablet", "Injection", "Syrup"];
-const prescriptionName = (option) => {
-  if (option === "Tablet") return ["Paracetamol", "Amoxycillin"];
-  if (option === "Injection") return ["Remdesivir", "Insulin"];
-  if (option === "Syrup") return ["Febrexplus", "TusQ-D"];
-  return [];
-};
+import Autocomplete from "@mui/material/Autocomplete";
+import TextField from "@mui/material/TextField";
+
+const tabletName = [
+  "Paracetamol",
+  "Amoxycillin",
+  "Omaze",
+  "Sinarest",
+  "Hydroxychloroquine",
+  "Azithromycin",
+];
+const injectionName = ["Remdesivir", "Insulin"];
+const syrupName = ["Febrexplus", "TusQ-D"];
 const testOptions = ["CBC test", "Urine test"];
 const NoteDialog = ({ type, open, onClose, notes, id }) => {
-  const [data, setData] = useState();
-  const [subData, setSubData] = useState();
+  const [tablets, setTablets] = useState([]);
+  const [injections, setInjections] = useState([]);
+  const [syrups, setSyrups] = useState([]);
+  const [test, setTest] = useState([]);
+
   const [description, setDescription] = useState();
   const { user } = useSelector((state) => state.auth);
   useEffect(() => {
     if (notes) {
-      setData(notes.data);
+      setTablets(notes.tablets || []);
       setDescription(notes.description);
-      setSubData(notes.subData);
+      setInjections(notes.injections || []);
+      setSyrups(notes.syrups || []);
+      setTest(notes.test || []);
     }
   }, [notes]);
   const dispatch = useDispatch();
@@ -48,44 +59,81 @@ const NoteDialog = ({ type, open, onClose, notes, id }) => {
         <Divider />
         <div className='form form-wrapper' id='download'>
           {" "}
-          {type === "Prescription" && (
-            <>
-              <div className='form-group'>
-                <label>Prescription Type</label>
-                <select onChange={(e) => setData(e.target.value)} value={data}>
-                  <option>--Select--</option>
-                  {prescriptionOptions.map((item) => (
-                    <option>{item}</option>
-                  ))}
-                </select>
-              </div>
-              <div className='form-group'>
-                <label>{data || "Prescription"} name</label>
-                <select
-                  onChange={(e) => setSubData(e.target.value)}
-                  value={subData}
-                >
-                  <option>--Select--</option>
-                  {prescriptionName(data).map((item) => (
-                    <option>{item}</option>
-                  ))}
-                </select>
-              </div>
-            </>
-          )}
-          {type === "Lab Record" && (
-            <>
-              <div className='form-group'>
-                <label>Test Name</label>
-                <select onChange={(e) => setData(e.target.value)} value={data}>
-                  <option>--Select--</option>
-                  {testOptions.map((item) => (
-                    <option>{item}</option>
-                  ))}
-                </select>
-              </div>
-            </>
-          )}
+          <>
+            <div className='form-group'>
+              <Autocomplete
+                multiple
+                options={tabletName}
+                onChange={(e, value) => setTablets(value)}
+                value={tablets}
+                size={"medium"}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    variant='outlined'
+                    label='Tablets '
+                    placeholder='Add More?'
+                    sx={{
+                      ".MuiAutocomplete-input": {
+                        border: "none",
+                      },
+                    }}
+                  />
+                )}
+              />
+            </div>
+            <div className='form-group'>
+              <Autocomplete
+                multiple
+                options={injectionName}
+                onChange={(e, value) => setInjections(value)}
+                value={injections}
+                size={"medium"}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    variant='outlined'
+                    label='Injections '
+                    placeholder='Add More?'
+                  />
+                )}
+              />
+            </div>
+            <div className='form-group'>
+              <Autocomplete
+                multiple
+                options={syrupName}
+                onChange={(e, value) => setSyrups(value)}
+                value={syrups}
+                size={"medium"}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    variant='outlined'
+                    label='Syrups '
+                    placeholder='Add More?'
+                  />
+                )}
+              />
+            </div>
+            <div className='form-group'>
+              <Autocomplete
+                multiple
+                options={testOptions}
+                onChange={(e, value) => setTest(value)}
+                value={test}
+                size={"medium"}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    variant='outlined'
+                    label='Lab Tests '
+                    placeholder='Add More?'
+                  />
+                )}
+              />
+            </div>
+          </>
           <div className='form-group'>
             <label>Description</label>
             <textarea
@@ -105,11 +153,17 @@ const NoteDialog = ({ type, open, onClose, notes, id }) => {
               width: 160px;
             `}
             onClick={() => {
-              dispatch(updateFile(id, { data, subData, description })).then(
-                () => {
-                  dispatch(getFile({ filter: type, page: 1 }));
-                }
-              );
+              dispatch(
+                updateFile(id, {
+                  tablets,
+                  syrups,
+                  injections,
+                  test,
+                  description,
+                })
+              ).then(() => {
+                dispatch(getFile({ filter: type, page: 0 }));
+              });
             }}
           >
             Update Note
@@ -134,23 +188,44 @@ const NoteDialog = ({ type, open, onClose, notes, id }) => {
                 15,
                 25
               );
-              if (data) {
+              let xdoc = 15,
+                ydoc = 35;
+              if (tablets.length) {
                 doc.setTextColor("#17a2b8");
-                doc.text("Category :", 15, 35);
+                doc.text("Tablets", xdoc, ydoc);
                 doc.setTextColor("#343a40");
-                doc.text(data || "", 60, 35);
+                doc.text(tablets, xdoc, ydoc + 10);
+                ydoc += tablets.length * 10;
+                ydoc += 10;
               }
-              if (subData) {
+              if (injections.length) {
                 doc.setTextColor("#17a2b8");
-                doc.text("Sub Category:", 15, 45);
+                doc.text("Injections", xdoc, ydoc);
                 doc.setTextColor("#343a40");
-                doc.text(subData || "", 60, 45);
+                doc.text(injections, xdoc, ydoc + 6);
+                ydoc += injections.length * 10;
+                ydoc += 10;
+              }
+              if (syrups.length) {
+                doc.setTextColor("#17a2b8");
+                doc.text("Syrups", xdoc, ydoc);
+                doc.setTextColor("#343a40");
+                doc.text(syrups, xdoc, ydoc + 6);
+                ydoc += syrups.length * 10;
+                ydoc += 10;
+              }
+              if (test.length) {
+                doc.setTextColor("#17a2b8");
+                doc.text("Lab Test", xdoc, ydoc);
+                doc.setTextColor("#343a40");
+                doc.text(test, xdoc, ydoc + 6);
+                ydoc += test.length * 10;
+                ydoc += 10;
               }
               doc.setTextColor("#17a2b8");
-              doc.text("Description:", 15, 55);
-
+              doc.text("Description", xdoc, ydoc);
               doc.setTextColor("#343a40");
-              doc.text(description || "", 60, 55);
+              doc.text(description, xdoc, ydoc + 6, { maxWidth: 160 });
               doc.save(id + ".pdf");
             }}
           >
