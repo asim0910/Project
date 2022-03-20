@@ -5,6 +5,7 @@ import ImageViewer from "../DicomViewer/ImageViewer";
 import "styled-components/macro";
 import Spinner from "../Spinner/Spinner";
 import { Link } from "react-router-dom";
+import NoteDialog from "../NoteDialog/NoteDialog";
 const UserProfile = () => {
   const dispatch = useDispatch();
 
@@ -12,6 +13,9 @@ const UserProfile = () => {
   const [selectedFile, setSelectedFile] = useState();
   const [filter, setFilter] = useState("X-Ray");
   const [page, setPage] = useState(0);
+  const [open, setOpen] = useState(false);
+  const [notes, setNotes] = useState();
+  const [id, setId] = useState(null);
   useEffect(() => {
     dispatch(getFile({ filter, page }));
   }, [dispatch, filter, page]);
@@ -102,9 +106,6 @@ const UserProfile = () => {
                     >
                       <button
                         className='btn btn-primary'
-                        css={`
-                          width: 50%;
-                        `}
                         onClick={() => {
                           setSelectedFile(
                             new File([item.blob], item.name, {
@@ -114,6 +115,16 @@ const UserProfile = () => {
                         }}
                       >
                         View
+                      </button>
+                      <button
+                        className='btn btn-secondary'
+                        onClick={() => {
+                          setOpen(true);
+                          setId(item.id);
+                          setNotes(item.notes);
+                        }}
+                      >
+                        <i class='fa fa-edit'></i>
                       </button>
                       <button
                         className='btn btn-danger'
@@ -183,6 +194,13 @@ const UserProfile = () => {
               </div>
             </>
           )}
+          <NoteDialog
+            open={open}
+            onClose={() => setOpen(false)}
+            id={id}
+            notes={notes}
+            type={filter}
+          />
         </div>
 
         <div

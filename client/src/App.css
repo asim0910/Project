@@ -246,7 +246,12 @@ img {
   margin-top: 0.3rem;
   color: #888;
 }
-
+.form-wrapper {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 12px;
+  width: 100%;
+}
 .form input[type="text"],
 .form input[type="email"],
 .form input[type="password"],

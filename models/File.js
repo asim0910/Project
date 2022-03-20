@@ -25,6 +25,9 @@ const FileSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
+  notes: {
+    type: mongoose.SchemaTypes.Mixed,
+  },
 });
 
 module.exports = mongoose.model("file", FileSchema);

@@ -42,6 +42,16 @@ export const deleteFile = (id) => async (dispatch) => {
     dispatch(setAlert("Deleted !!", "success"));
   } catch (err) {
     console.error(err);
+    dispatch(setAlert("Delete failed!!", "danger"));
+  }
+};
+export const updateFile = (id, notes) => async (dispatch) => {
+  try {
+    await api.put(`/upload`, { id, notes });
+    dispatch(setAlert("Update Success !!", "success"));
+  } catch (err) {
+    console.error(err);
+    dispatch(setAlert("Update failed!!", "danger"));
   }
 };
 export const getFile = (formData) => async (dispatch) => {
@@ -69,6 +79,7 @@ export const getFile = (formData) => async (dispatch) => {
         type: item.doc.split(";")[0],
         date: item.time,
         id: item._id,
+        notes: item.notes,
       };
     });
     const data = await Promise.all(dataObjectArrays);
