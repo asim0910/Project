@@ -1,5 +1,5 @@
 :root {
-  --primary-color: #17a2b8;
+  --primary-color: #92e3a9;
   --dark-color: #343a40;
   --light-color: #f4f4f4;
   --danger-color: #dc3545;
@@ -136,6 +136,7 @@ img {
   margin-right: 0.5rem;
   transition: opacity 0.2s ease-in;
   outline: none;
+  font-weight: 600;
 }
 
 .badge {
@@ -162,8 +163,8 @@ img {
 .bg-primary,
 .badge-primary,
 .alert-primary {
-  background: var(--primary-color);
-  color: #fff;
+  background: #92e3a9;
+  color: #263238;
 }
 
 .btn-light,

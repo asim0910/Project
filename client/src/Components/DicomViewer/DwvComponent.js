@@ -467,6 +467,7 @@ class DwvComponent extends React.Component {
         // check content
         if (box.innerHTML === "") {
           const p = document.createElement("p");
+          p.style.padding = "20px 0 0";
           p.appendChild(
             document.createTextNode("You can drop local files here as well")
           );

@@ -29,10 +29,11 @@
   vertical-align: middle;
   width: 100%;
   height: 75%;
+  background: #dff7e5;
 }
-.dropBoxBorder {
-  border: 5px dashed #e8eaf6; /*indigo:light*/
-}
+/* .dropBoxBorder { */
+/* border: 5px dashed #e8eaf6; indigo:light */
+/* } */
 .dropBoxBorder.hover {
   border: 5px dashed #3f51b5; /*indigo*/
 }
